@@ -5,7 +5,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.react-flow__node .react-flow__handle.connectable {
+  border-color: white;
+  background: lightseagreen;
 }
