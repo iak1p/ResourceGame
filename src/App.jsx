@@ -5,6 +5,7 @@ function App() {
   return (
     <>
       <ReactFlowProvider>
+        <p style={{ position: "absolute" }}>MONEY</p>
         <AppRoutes />
       </ReactFlowProvider>
     </>

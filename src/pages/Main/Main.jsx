@@ -1,10 +1,7 @@
 import {
   addEdge,
   Background,
-  MiniMap,
-  Position,
   ReactFlow,
-  ReactFlowProvider,
   reconnectEdge,
   useEdgesState,
   useNodesState,
@@ -13,6 +10,13 @@ import React, { useCallback, useRef } from "react";
 import AnimatedEdge from "../../components/AnimatedEdge/AnimatedEdge";
 import TestNode from "../../components/TestNode/TestNode";
 import ResourceNode from "../../components/ResourceNode/ResourceNode";
+import { lumberMill } from "../../nodes/lumberMill";
+import { waterPurifier } from "../../nodes/waterPurifier";
+import { water } from "../../nodes/water";
+import { wood } from "../../nodes/wood";
+import { wheat } from "../../nodes/wheat";
+import { mill } from "../../nodes/mill";
+import { bakery } from "../../nodes/bakery";
 
 const nodeTypes = {
   testNode: TestNode,
@@ -26,117 +30,16 @@ const edgeTypes = {
 export default function Main() {
   const edgeReconnectSuccessful = useRef(true);
   const [nodes, setNodes, onNodesChange] = useNodesState([
-    {
-      id: crypto.randomUUID(),
-      position: { x: 200, y: 0 },
-      data: {
-        label: "pred",
-        need: [
-          { count: 2, type: "wood" },
-          { count: 1, type: "clear water" },
-        ],
-        text: "Lumber Mill",
-        desc: "Turns wood into planks",
-        type: "doski",
-        handles: [
-          {
-            type: "target",
-            position: Position.Left,
-            id: crypto.randomUUID(),
-            connectionCount: 1,
-            style: { top: "20%" },
-          },
-          {
-            type: "target",
-            position: Position.Left,
-            id: crypto.randomUUID(),
-            connectionCount: 1,
-            style: { top: "80%" },
-          },
-          {
-            type: "source",
-            position: Position.Right,
-            id: crypto.randomUUID(),
-            connectionCount: 1,
-          },
-        ],
-      },
-      type: "testNode",
-    },
-    {
-      id: crypto.randomUUID(),
-      position: { x: 0, y: 200 },
-      data: {
-        label: "pred",
-        need: [{ count: 2, type: "water" }],
-        text: "Water Purifier",
-        desc: "Filters water for technical purposes",
-        type: "clear water",
-        handles: [
-          {
-            type: "target",
-            position: Position.Left,
-            id: crypto.randomUUID(),
-            connectionCount: 1,
-          },
-          {
-            type: "source",
-            position: Position.Right,
-            id: crypto.randomUUID(),
-            connectionCount: 1,
-          },
-        ],
-      },
-      type: "testNode",
-    },
-    {
-      id: crypto.randomUUID(),
-      position: { x: -200, y: 0 },
-      data: {
-        label: "pred",
-        need: [{ count: 2, type: "water" }],
-        text: "sklad",
-        desc: "Filters water for technical purposes",
-        handles: [
-          {
-            type: "target",
-            position: Position.Top,
-            id: crypto.randomUUID(),
-            connectionCount: 100,
-          },
-        ],
-      },
-      type: "testNode",
-    },
-    {
-      id: "3",
-      position: { x: 0, y: 0 },
-      data: {
-        color: "#a52a2a",
-        borderColor: "darkred",
-        name: "Wood",
-        type: "wood",
-        connectionCount: 1,
-      },
-      type: "resource",
-    },
-    {
-      id: "4",
-      position: { x: 0, y: -200 },
-      data: {
-        color: "#87cefa",
-        borderColor: "lightslategray",
-        name: "Water",
-        type: "water",
-        connectionCount: 2,
-      },
-      type: "resource",
-    },
+    lumberMill,
+    waterPurifier,
+    wood,
+    water,
+    wheat,
+    mill,
+    bakery,
   ]);
 
   const handleAnimationRepeat = (targetId, type) => {
-    // console.log(type);
-
     setNodes((nds) =>
       nds.map((node) =>
         node.id === targetId
@@ -150,8 +53,6 @@ export default function Main() {
   };
 
   const handleCreate = (targetId, need) => {
-    console.log(need);
-
     setNodes((nds) =>
       nds.map((node) =>
         node.id === targetId
@@ -167,9 +68,7 @@ export default function Main() {
     );
   };
 
-  const [edges, setEdges, onEdgesChange] = useEdgesState([
-    { id: "e1-2", source: "1", target: "2" },
-  ]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const onConnect = useCallback(
     (params) => {
@@ -203,6 +102,17 @@ export default function Main() {
     [setEdges]
   );
 
+  const isValidConnection = (connection) => {
+    const { source, target } = connection;
+
+    const sourceData = nodes.find((n) => n.id === source);
+    const targetData = nodes.find((n) => n.id === target);
+
+    const need = targetData.data.need;
+
+    return need.find((el) => el.type === sourceData.data.type);
+  };
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
@@ -214,11 +124,13 @@ export default function Main() {
         onReconnect={onReconnect}
         onReconnectStart={onReconnectStart}
         onReconnectEnd={onReconnectEnd}
+        isValidConnection={isValidConnection}
         onConnect={onConnect}
         edgeTypes={edgeTypes}
         fitView
         nodeTypes={nodeTypes}
         attributionPosition="top-right"
+        className="validationflow"
       />
       {/* <MiniMap
         nodeStrokeColor={(n) => {

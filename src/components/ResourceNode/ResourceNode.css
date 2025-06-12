@@ -1,8 +1,18 @@
-.wood-node {
+.resource-node {
+  border: 1px solid lightslategray;
+  background-color: #fff;
   border-radius: 7px;
   padding: 10px;
+  color: black;
+  width: 150px;
+  padding: 0;
+  overflow: hidden;
+  height: 50px;
+  font-size: 12px;
+}
+
+.resource-node_header {
+  width: 100%;
+  padding: 5px 0;
   color: white;
-  width: 80px;
-  font-size: 10px;
-  text-align: center;
 }

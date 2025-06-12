@@ -1,20 +1,27 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import CustomHandle from "../CustomHandle/CustomHandle";
-import { Handle, Position } from "@xyflow/react";
 import "./TestNode.css";
+import { TYPES } from "../../nodes/resourceTypes";
 
 function TestNode({ data, isConnectable }) {
-  const recours = ["water", "clear water", "wood", "doski"];
   return (
-    <div className="test-node">
-      <div className="test-node_header">
-        <p>{data.text}</p>
+    <div className="test-node" style={{ borderColor: data.color }}>
+      <div className="test-node_header" style={{ backgroundColor: data.color }}>
+        <p
+          style={{
+            textAlign: "center",
+            textTransform: "uppercase",
+            fontWeight: "bold",
+          }}
+        >
+          {data.text}
+        </p>
         <p className="desc">{data.desc}</p>
       </div>
       <div className="test-node_body">
         <p>In storage:</p>
         {Object.entries(data).map(([key, value]) =>
-          recours.includes(key) ? (
+          Object.values(TYPES).includes(key) ? (
             <div key={key}>
               {key}: {String(value)}
             </div>
