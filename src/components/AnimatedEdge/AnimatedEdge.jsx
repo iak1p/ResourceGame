@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   BaseEdge,
+  getBezierPath,
   getSmoothStepPath,
-  useNodes,
   useNodesData,
 } from "@xyflow/react";
+import { TYPES } from "../../nodes/resourceTypes";
 
 export default function AnimatedEdge({
   id,
@@ -18,7 +19,7 @@ export default function AnimatedEdge({
   source,
   data = {},
 }) {
-  const [edgePath] = getSmoothStepPath({
+  const [edgePath] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -28,18 +29,16 @@ export default function AnimatedEdge({
   });
   const animateRef = useRef(null);
   const svgRef = useRef(null);
-  // console.log(data);
-  // console.log(source);
 
-  const nodeData = useNodesData(target);
+  // const nodeData = useNodesData(target);
   const sourceData = useNodesData(source);
 
   const [selfData, setSelfData] = useState({});
   const selfDataRef = useRef(selfData);
-  const [played, setPlayed] = useState(true);
+  // const [played, setPlayed] = useState(true);
 
   useEffect(() => {
-    if (sourceData.data.label == "pred") {
+    if (sourceData.data.label === TYPES.FACTORY) {
       setSelfData(sourceData.data);
     }
   }, [sourceData]);
@@ -48,26 +47,23 @@ export default function AnimatedEdge({
     selfDataRef.current = selfData;
   }, [selfData]);
 
-  const pause = () => {
-    svgRef.current?.pauseAnimations();
-    setPlayed(false);
-  };
+  // const pause = () => {
+  //   svgRef.current?.pauseAnimations();
+  //   setPlayed(false);
+  // };
 
-  const play = () => {
-    svgRef.current?.unpauseAnimations();
-    setPlayed(true);
-  };
+  // const play = () => {
+  //   svgRef.current?.unpauseAnimations();
+  //   setPlayed(true);
+  // };
 
   useEffect(() => {
     const node = animateRef.current;
 
     return () =>
       node?.addEventListener("repeatEvent", () => {
-        // console.log(nodeData.data.wood);
-        // console.log("type", sourceData.type);
-        if (sourceData.data.label === "pred") {
+        if (sourceData.data.label === TYPES.FACTORY) {
           const need = selfDataRef.current.need;
-          console.log("NEEED", need);
 
           const allEnough = need.every(
             (el) => selfDataRef.current[el.type] >= el.count
@@ -83,10 +79,6 @@ export default function AnimatedEdge({
           return;
         }
 
-        console.log("====================================");
-        console.log(selfDataRef.current);
-        console.log("====================================");
-
         data.handleAnimationRepeat(target, sourceData.data.type);
       });
   }, []);
@@ -97,7 +89,7 @@ export default function AnimatedEdge({
       <circle
         r="2"
         fill={sourceData.data.color}
-        style={{ opacity: played ? "1" : "0" }}
+        // style={{ opacity: played ? "1" : "0" }}
       >
         <animateMotion
           ref={animateRef}

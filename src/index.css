@@ -6,6 +6,14 @@ body {
 }
 
 .react-flow__node .react-flow__handle.connectable {
-  border-color: white;
-  background: lightseagreen;
+  border-color: gray;
+  background: white;
+}
+
+.validationflow .react-flow__handle.connectingto {
+  background: lightcoral;
+}
+
+.validationflow .react-flow__handle.valid {
+  background: lightgreen;
 }

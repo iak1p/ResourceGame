@@ -11,7 +11,9 @@ const CustomHandle = (props) => {
       {...props}
       isConnectable={
         connections.length < props.connectionCount ||
-        connections?.every((c) => c.targetHandle != props.id && c.sourceHandle != props.id)
+        connections?.every(
+          (c) => c.targetHandle !== props.id && c.sourceHandle !== props.id
+        )
       }
     />
   );
