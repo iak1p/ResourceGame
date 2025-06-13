@@ -7,4 +7,6 @@ export const TYPES = {
   FACTORY: "factory",
   FLOUR: "flour",
   BREAD: "bread",
+  SKLAD: "sklad",
+  ALL: "all",
 };

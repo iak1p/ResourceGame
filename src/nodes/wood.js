@@ -9,6 +9,8 @@ export const wood = {
     name: "Wood",
     type: TYPES.WOOD,
     connectionCount: 1,
+    price: 2,
+    rs: TYPES.WOOD,
   },
   type: "resource",
 };

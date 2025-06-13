@@ -9,6 +9,8 @@ export const wheat = {
     name: "Wheat",
     type: TYPES.WHEAT,
     connectionCount: 1,
+    price: 1,
+    rs: TYPES.WHEAT,
   },
   type: "resource",
 };
