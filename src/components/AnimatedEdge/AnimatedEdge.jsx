@@ -30,12 +30,11 @@ export default function AnimatedEdge({
   const animateRef = useRef(null);
   const svgRef = useRef(null);
 
-  // const nodeData = useNodesData(target);
+  const nodeData = useNodesData(target);
   const sourceData = useNodesData(source);
 
   const [selfData, setSelfData] = useState({});
   const selfDataRef = useRef(selfData);
-  // const [played, setPlayed] = useState(true);
 
   useEffect(() => {
     if (sourceData.data.label === TYPES.FACTORY) {
@@ -47,21 +46,21 @@ export default function AnimatedEdge({
     selfDataRef.current = selfData;
   }, [selfData]);
 
-  // const pause = () => {
-  //   svgRef.current?.pauseAnimations();
-  //   setPlayed(false);
-  // };
+  const pause = () => {
+    svgRef.current?.pauseAnimations();
+  };
 
-  // const play = () => {
-  //   svgRef.current?.unpauseAnimations();
-  //   setPlayed(true);
-  // };
+  const play = () => {
+    svgRef.current?.unpauseAnimations();
+  };
 
   useEffect(() => {
     const node = animateRef.current;
 
     return () =>
       node?.addEventListener("repeatEvent", () => {
+        console.log(nodeData.data.label, sourceData.data.label);
+
         if (sourceData.data.label === TYPES.FACTORY) {
           const need = selfDataRef.current.need;
 
@@ -74,14 +73,35 @@ export default function AnimatedEdge({
               data.handleCreate(source, el);
             });
             data.handleAnimationRepeat(target, sourceData.data.type);
+
+            if (nodeData.data.label === TYPES.SKLAD) {
+              data.hadleMoneyChange(sourceData.data.price);
+            }
           }
 
           return;
+        } else if (nodeData.data.label === TYPES.SKLAD) {
+          data.hadleMoneyChange(sourceData.data.price);
         }
 
         data.handleAnimationRepeat(target, sourceData.data.type);
       });
   }, []);
+
+  useEffect(() => {
+    if (sourceData.data.label === TYPES.FACTORY) {
+      const need = sourceData.data.need;
+      const allEnough = need.every(
+        (el) => sourceData.data[el.type] >= el.count
+      );
+
+      if (allEnough) {
+        play();
+      } else {
+        pause();
+      }
+    }
+  }, [sourceData.data, nodeData.data]);
 
   return (
     <svg ref={svgRef} style={{ overflow: "visible", position: "absolute" }}>
@@ -89,7 +109,7 @@ export default function AnimatedEdge({
       <circle
         r="2"
         fill={sourceData.data.color}
-        // style={{ opacity: played ? "1" : "0" }}
+        // style={{ opacity: allEnough ? "1" : "0" }}
       >
         <animateMotion
           ref={animateRef}
@@ -97,6 +117,7 @@ export default function AnimatedEdge({
           repeatCount="indefinite"
           path={edgePath}
         />
+        <p>test</p>
       </circle>
     </svg>
   );

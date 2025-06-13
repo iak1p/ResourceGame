@@ -1,3 +1,4 @@
+import { DnDProvider } from "./components/DnDContext/DnDContext";
 import AppRoutes from "./routes/AppRoutes";
 import { ReactFlowProvider } from "@xyflow/react";
 
@@ -5,8 +6,9 @@ function App() {
   return (
     <>
       <ReactFlowProvider>
-        <p style={{ position: "absolute" }}>MONEY</p>
-        <AppRoutes />
+        <DnDProvider>
+          <AppRoutes />
+        </DnDProvider>
       </ReactFlowProvider>
     </>
   );

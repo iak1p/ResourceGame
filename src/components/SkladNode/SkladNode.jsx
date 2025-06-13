@@ -1,9 +1,9 @@
 import { memo } from "react";
 import CustomHandle from "../CustomHandle/CustomHandle";
-import "./TestNode.css";
+import "./SkladNode.css";
 import { TYPES } from "../../nodes/resourceTypes";
 
-function TestNode({ data, isConnectable }) {
+function SkladNode({ data, isConnectable }) {
   return (
     <div className="test-node" style={{ borderColor: data.color }}>
       <div className="test-node_header" style={{ backgroundColor: data.color }}>
@@ -18,7 +18,7 @@ function TestNode({ data, isConnectable }) {
         </p>
         <p className="desc">{data.desc}</p>
       </div>
-      {/* <div className="test-node_body">
+      <div className="test-node_body">
         <p>In storage:</p>
         {Object.entries(data).map(([key, value]) =>
           Object.values(TYPES).includes(key) ? (
@@ -27,7 +27,7 @@ function TestNode({ data, isConnectable }) {
             </div>
           ) : null
         )}
-      </div> */}
+      </div>
       {data.handles.map((el) => {
         return (
           <CustomHandle
@@ -36,9 +36,6 @@ function TestNode({ data, isConnectable }) {
             connectionCount={el.connectionCount}
             id={el.id}
             style={el.style}
-            rs={el.rs}
-            rscount={data[el.rs]}
-            color={data.color}
           />
         );
       })}
@@ -46,4 +43,4 @@ function TestNode({ data, isConnectable }) {
   );
 }
 
-export default memo(TestNode);
+export default memo(SkladNode);

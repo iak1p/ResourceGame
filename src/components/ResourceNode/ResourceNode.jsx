@@ -4,7 +4,7 @@ import "./ResourceNode.css";
 import CustomHandle from "../CustomHandle/CustomHandle";
 
 export default function ResourceNode(props) {
-  const { color, name, connectionCount, borderColor } = props.data;
+  const { color, name, connectionCount, borderColor, rs } = props.data;
 
   return (
     <div className="resource-node" style={{ borderColor: color }}>
@@ -31,6 +31,9 @@ export default function ResourceNode(props) {
         position={Position.Right}
         connectionCount={connectionCount}
         id="s-1"
+        rs={rs}
+        style={{ top: "60%"}}
+        color={color}
       />
     </div>
   );
